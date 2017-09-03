@@ -130,4 +130,44 @@ print(random_numbers)
 lowest_number = str(random_numbers.pop(0))
 print('The lowest rando there is: {lowest}'.format(lowest = lowest_number))
 
+## List comprehension
+user_input = '1,2,3,4,5,6'
+user_numbers = user_input.split(',') # => [1, 2, 4, 3, 5, 6]
+user_numbers_as_int = []
+for number in user_numbers: 
+  user_numbers_as_int.append(int(number))
+
+[number for number in user_numbers]
+
+user_numbers = ['1','2','3','4','5','6']
+user_numbers # => ['1', '2', '3', '4', '5', '6']
+user_numbers_as_int = [int(number) for number in user_numbers_as_int]
+user_numbers_as_int # => [1, 2, 3, 4, 5, 6]
+
+# Set - a list with unique values only. 
+# https://infohost.nmt.edu/tcc/help/pubs/python/web/set-types.html
+
+numbers = set()
+numbers # => set()
+numbers.add(3)
+numbers # notice curly braces  => {3} 
+numbers.add(3)
+numbers # notice that it only contains the original 3 => {3}
+
+lottery_values = {3, 5, 17, 6}
+lottery_values # => {3, 5, 17, 6}
+user_values = {3, 5, 11, 2}
+user_values # => {3, 5, 11, 2} 
+lottery_values.intersection(user_values) # => {3, 5}
+user_values.intersection(lottery_values) # => {3, 5}
+
+# Dictionary
+sample_dictionary = {'name': 'Rich', 'mark': 70}
+
+print(sample_dictionary['name']) # => 'Rich'
+
+
+
+
+
 
