@@ -166,6 +166,78 @@ sample_dictionary = {'name': 'Rich', 'mark': 70}
 
 print(sample_dictionary['name']) # => 'Rich'
 
+# OOP -> Classes in Python
+# Must use dot notation when accessing a class's values.
+
+class Student:
+  def __init__(self, name):
+    self.name = name
+    self.marks = []
+
+  def average_mark(self):
+    number = len(self.marks)
+    if number == 0:
+      return 'The student {} has no marks to average!'.format(self.name)
+
+    total = sum(self.marks)
+    return total / number
+
+
+class Movie:
+  def __init__(self, title, genre):
+    self.title = title
+    self. genre = genre
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
