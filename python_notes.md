@@ -183,32 +183,89 @@ class Student:
     return total / number
 
 
+## in movie.py
 class Movie:
   def __init__(self, title, genre):
     self.title = title
     self. genre = genre
 
+## in user.py
+class User:
+  def __init__(self, name):
+    self.name = name
+    self.movies = []
+
+  def __repr__(self):
+    return "<User {}>".format(self.name)
 
 
 
+## Writing to a csv file in Python
+# must open a file and close it to insure the file is properly saved.
+# 'w' stands for 'write', 'r' stands for 'r'
+
+with open('my_file.txt', 'w') as f: 
+  f.write('Hello, World!')
+# f.close() is not necessary because we are using a with block
+
+with open('my_file.txt', 'r') as f:
+  print(f.readline())    # => 'Hello, World!'
 
 
+### reading a file from csv
+content = f.readlines() # reads multiple lines and returns a list.
+content = f.readline
 
+  def load_from_file(self, filename):
+    with open('{}.txt'.format(filename), 'r') as f:
+      content = f.readlines()
+      username = content[0]
+      movies = []
+      
+      #  Start iterating from index 1 to the end of the file
+      for line in content[1:]:
+        movie_data = line.split(',')  # ['title', 'genre', 'watched']
+        movies.append(Movie(movie_data[0], movie_data[1], movie_data[2] == 'True'))
 
+      user = User(username)
+      user.movies = movies
+      return user
 
+##Class Methods
+  @classmethod
+  def load_from_file(cls, filename):
+    with open('{}.txt'.format(filename), 'r') as f:
+      content = f.readlines()
+      username = content[0]
+      movies = []
 
+      for line in content[1:]:
+        movie_data = line.split(',')  # ['title', 'genre', 'watched']
+        movies.append(Movie(movie_data[0], movie_data[1], movie_data[2] == 'True'))
 
+      user = User(username)
+      user.movies = movies
+      return user
 
+## Using JSON
+  json.dump()
+  json.load()
 
+#argument unpacking
+  ordering becomes irrelevant if you unpack the name
 
+#in movie.py
+  @classmethod
+  def from_json(cls, json_data):  # {'title': '...', 'genre': '...', 'watched': True}
+    return Movie(title=json_data['title'], genre=json_data['genre'], watched=json_data['watched'])
 
+#this is the same as above
+  @classmethod
+  def from_json(cls, json_data):
+    return Movie(**json_data) #  **json_data is a way of creating the dictionary from the json data.
 
-
-
-
-
-
-
+# opening files in Python
+  https://docs.python.org/3/library/functions.html#open
 
 
 
