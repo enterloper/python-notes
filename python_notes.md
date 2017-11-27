@@ -267,6 +267,29 @@ content = f.readline
 # opening files in Python
   https://docs.python.org/3/library/functions.html#open
 
+tuple's are very similar to lists with the exception being tuple's are immutable (cannot be changed).
+
+
+# -------------------------- NEW BASICS SECTION -------------------------- #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

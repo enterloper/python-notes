@@ -177,7 +177,7 @@ The most common JOINs are INNER JOIN, followed by LEFT JOIN.
     ALTER COLUMN id
     SET DEFAULT nextval('users_id_seq')
   
-  # ATTACK SEQUENCE to a TABLE (this way the sequence is deleted with the table when the table is dropped)
+  # ATTACH SEQUENCE to a TABLE (this way the sequence is deleted with the table when the table is dropped)
     
     ALTER SEQUENCE users_id_seq OWNED BY public.users.id;
 
@@ -217,8 +217,117 @@ The most common JOINs are INNER JOIN, followed by LEFT JOIN.
     # Then to reference the view we can do: 
 
       SELECT * FROM total_revenue_per_customer;
-       
+
+    #To DROP the view: 
+
+      DROP VIEW total_revenue_per_customer;
+
+  # another view just with customer_id added:
+
+    CREATE VIEW total_revenue_per_customer AS
+    SELECT customers.id, customers.first_name, customers.last_name, SUM(items.price) AS "total_spent" FROM customers
+    INNER JOIN purchases ON customers.id = purchases.customer_id
+    INNER JOIN items ON purchases.item_id = items.id
+    GROUP BY customers.id; 
+    
+  # WHY VIEWS ARE VALUABLE ( The query is saved so additional data can be referenced from the return )
+
+    SELECT * FROM total_revenue_per_customer WHERE total_spent > 150;
+
+    - Then create the view
+      
+      CREATE VIEW awesome_customers AS
+      SELECT * FROM total_revenue_per_customer WHERE total_spent > 150;
+    
+    - then reference the view of the previous view and do whatever you like for display
+
+      SELECT * FROM awesome_customers ORDER BY total_spent DESC;
   
+  # INSERT INTO A VIEW (cannot be done if VIEW has a group by clause, due to losing granularity)
+    -create the view
+      CREATE VIEW expensive_items AS
+      SELECT * FROM items WHERE price > 100;
 
+    -insert the desired value to the view
+      INSERT INTO expensive_items(id, name, price)
+      VALUES (10, 'laptop', 400.00);
 
+      #drop the view above to make a new view with a local check
+      -DROP VIEW expensive_items;
 
+  # WITH LOCAL CHECK OPTION makes sure that items can not be added to the view if they don't meet the requirements
+    
+    CREATE VIEW expensive_items AS
+    SELECT * FROM items WHERE price > 100
+    WITH LOCAL CHECK OPTION;
+    
+    #this now throws an error
+    INSERT INTO expensive_items(id, name, price)
+    VALUES (11, 'Pencil', 2.00)
+  
+  # FUNCTIONS IN SQL
+      -COUNT()
+        SELECT customers.first_name, customers.last_name, COUNT(purchases.id) AS purchase_count
+        FROM customers
+        INNER JOIN purchases ON customers.id = purchases.customer_id
+        GROUP BY customers.id;
+      -SUM()
+      -AVG()
+        SELECT AVG(items.price) FROM items;
+          *ANOTHER *
+        SELECT AVG(items.price) FROM ITEMS
+        INNER JOIN purchases ON items.id = purchases.item_id; 
+      -MAX()
+        this:      
+          SELECT items.name, items.price FROM ITEMS
+          INNER JOIN purchases ON items.id = purchases.item_id
+          ORDER BY items.price DESC
+          LIMIT 1;
+        is similar to this:
+          SELECT MAX(items.price) FROM items
+          INNER JOIN purchases ON items.id = purchases.item_id;
+        the difference is you lose some meta data in the returned query
+      -HAVING
+        SELECT customers.first_name, customers.last_name, COUNT(purchases.id) AS purchase_count
+        FROM customers
+        INNER JOIN purchases ON customers.id = purchases.customer_id
+        GROUP BY customers.id
+        HAVING COUNT(purchases.id) > 2;
+  ## DATES
+    -DEFAULT DATE - 2017-04-16 05:16:45 ISO
+    SELECT NOW(); - returns the date
+    SELECT TO_CHAR(NOW(), 'DD/MM/YYYY'); returns a formatted version of the date.
+    SELECT TO_CHAR(NOW(), 'FMDay, DDth FMMONTH, DD/MM/YYYY HH:MM:SS');
+    SELECT TO_CHAR(NOW(), 'FMDay DDth FMMonth, DD/MM/YYYY HH:MM:SS'); - Saturday 09th September, 09/09/2017 10:09:04
+    SELECT TO_TIMESTAMP('Saturday 09th September, 09/09/2017 10:09:04', 'FMDay DDth FMMonth, YYYY HH:MI:SS');
+    SELECT TO_TIMESTAMP('1983-04-16 01:02:02', 'YYYY-MM-DD HH:MI:SS')
+  ## OTHER TYPES 
+    - STORING IMAGES using the data type BYTEA 
+    - ENUM -> CREATE TYPE mood AS ENUM('extremely unhappy', 'unhappy', 'ok', 'happy', 'extremely happy');
+      -then create a table:
+        CREATE TABLE students (
+        name character varying(255),
+        current_mood mood
+        );
+      -then enter the value with the appropriate value from the ENUM above
+        INSERT INTO students VALUES ('Moe', 'happy');
+      -because ENUMS are lists, the values can be compared using >(=) or <(=)
+        SELECT * FROM students WHERE current_mood > 'ok';      
+  ## NESTED SELECT
+    SELECT * FROM items 
+    WHERE price > (SELECT AVG(items.price) FROM items);
+    SELECT items.name, items.price - (
+      SELECT AVG(items.price) FROM items
+    ) From items;
+    CREATE VIEW expensive_items_diff AS
+    SELECT *, items.price - (
+    SELECT AVG(items.price) From items WHERE price > 100) AS "average_diff"
+    FROM items WHERE price > 100;
+  # SEQUENCE - a way to auto increment values like ids
+    CREATE TABLE test (
+      id SERIAL PRIMARY KEY,
+      name character varying(255)
+    );
+    INSERT INTO test(name) VALUES ('rich');
+  # DELETE
+    DELETE * FROM users WHERE id != 1; 
