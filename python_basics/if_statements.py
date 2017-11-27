@@ -25,13 +25,14 @@ else:
 
 def who_do_you_know():
 	known_people = input("Enter the people you know separated by a comma! ")
-	peeps = [person.strip() for person in known_people.split(',')]
-	return peeps
+	return [person.strip() for person in known_people.split(',')]
+
 
 def ask_user(name_list):
 	user_choice = input("Please enter a name: ")
 	if user_choice in name_list:
 		print('Hey hey it looks like you know {}'.format(user_choice))
+
 
 user_list_of_known_people = who_do_you_know()
 
