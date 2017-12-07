@@ -70,4 +70,4 @@ intro-to-databases/venv
 venv/*
 flask_api_two/venv
 flask_api_three/venv/*
-
+flask_api_three/code/__pycache__/*
